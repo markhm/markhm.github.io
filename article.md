@@ -50,15 +50,15 @@ With this tag, we can now push the image to a registry. We could push to a local
 
 To check all is as expected, log in to [Docker Hub](https://hub.docker.com/) via a browser and see that the image is available. If necessary, modify the repository's visibility settings to `Private`.
 
-Next, we need to create a *Secret*, which Kubernetes can use authenticate and download the image we've just pushed.  
+Next, we need to create a *secret*, which Kubernetes can use authenticate and download the image we've just pushed.  
 
-Create such a *Secret* called `regcred` as follows:
+Create such a *secret* called `regcred` as follows:
 
 `kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>`
 
 (Replace the <attributes> with your own Docker credentials.)
 
-Once you have created the *Secret*, it is good to inspect the result with: `kubectl get secret regcred --output=yaml`.
+Once you have created the *secret*, it is good to inspect the result with: `kubectl get secret regcred --output=yaml`.
 
 #### 5: Preparing Kubernetes
 Kubernetes has a extensive command line utility called `kubectl` (by some pronounced as [Cube Control](https://opensource.com/article/18/12/kubectl-definitive-pronunciation-guide)), who's list of options can be slightly intimidating at the start. So before we're going to deploy to Kubernetes, we'll [install the Web UI Dashboard]
@@ -115,11 +115,11 @@ spec:
       nodePort: 30001
 
 ```
-There are several introductions to Kubernetes' configuration file format available online, e.g. [here](https://www.mirantis.com/blog/introduction-to-yaml-creating-a-kubernetes-deployment/), so we will not explain its full contents in this article. But we will point out the reference to the image (`docker.io/markhm/vaadin-ai-chat:1.0`) and 
+There are several introductions to Kubernetes' configuration file format available online, e.g. [here](https://www.mirantis.com/blog/introduction-to-yaml-creating-a-kubernetes-deployment/), so we will not explain its full contents in this article. But we will point out the reference to the image (`docker.io/<docker user_name>/vaadin-ai-chat:1.0`) and the secret we created earlier (`imagePullSecrets: - name: regcred`). At the end of the config file, you will see that the application that runs in the pod on port 8080 is actually exposed via port 30001. 
 
 Now, we can install the Chatbot application, by asking `kubectl` to apply the configuration, which means to deploy our application: `kubectl apply -f vaadin-chat.yml`.
 
-If you open your browser to https://localhost:30001, you will see the Chatapp in action for the third time, this time deployed to your local Kubernetes cluster.
+If you open your browser to https://localhost:30001, you will see the Chatapp in action for the third time, this time deployed to your local Kubernetes cluster. Congratulations...!
 
 You can remove (undeploy) the application again with the following command: `kubectl delete -f vaadin-chat.yml`.
 
