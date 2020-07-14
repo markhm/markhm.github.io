@@ -18,11 +18,13 @@ You want to ensure that everything works by first building and the app locally:
 The Maven `package` command will build the application, after which it is started as a Java jar application from the `target` directory. Check it out at http://localhost:8080.
 
 #### Creating an image
-Now we know that this works, we'll create a container image so we can easily deploy the application to other environments. Next, we need a Dockerfile to create a container image that we can deploy. I recently noticed that the [Vaadin Starter](https://start.vaadin.com/) now has a convenient option called 'Docker configuration'. We won't use the starter app that is generated this time, but we will extract the `Dockerfile` from the zip file that is conveniently downloaded after configuring the application. 
+Now we know that this works, we'll create a container image so we can easily deploy the application to other environments. We need a Dockerfile to create a container image that contains the application that we can then deploy. I recently noticed that the [Vaadin Starter](https://start.vaadin.com/) now has a convenient option called 'Docker configuration'. We won't use the Starter App that is generated this time, but we will extract the `Dockerfile` from the zip file that is conveniently downloaded after configuring the application. 
 
-So copy the `Dockerfile` to the root of the `vaadin-ai-chat` project and open the file to see what is happening. It is interesting to note that the Docker image consists of two different parts, or [multiple stages](https://docs.docker.com/develop/develop-images/multistage-build/). In the first part, the application is built and in the second part, the resulting jar file is run. Note that this means that the original source code is not longer available in the image that is eventually run. 
+So open https://start.vaadin.com/, select 'Docker configuration' in the lower left corner and click the blue Download App button at the top. Open the zip file and copy the `Dockerfile` to the `vaadin-ai-chat` project folder. 
 
-A Docker image based on the `Dockerfile` is created as follows: `docker build --tag vaadin-ai-chat:1.0 .` Note that is given the name `vaadin-ai-chat` and version number `1.0`.
+Take a moment to look at the `Dockerfile` to see what it contains. It is interesting to note that the `Dockerfile` consists of two parts, or [multiple stages](https://docs.docker.com/develop/develop-images/multistage-build/). In the first part, the application is built and in the second part, the resulting jar file is run. You will see that the jar file is copied from the first stage into the second stage `/usr/app/app.jar`. Note that this means that the original source code is not longer available in the image that is eventually run. 
+
+A Docker image based on the `Dockerfile` is created as follows: `docker build --tag vaadin-ai-chat:1.0 .` Note that is tagged with its name `vaadin-ai-chat` and version number `1.0`.
 
 #### Deploying to Docker
 As a next, intermediate step, it is good to check that the image can be correctly deployed to a local Docker environment.  
