@@ -27,13 +27,13 @@ Take a moment to look at the `Dockerfile` to see what it contains. It is interes
 A Docker image based on the `Dockerfile` is created as follows: `docker build --tag vaadin-ai-chat:1.0 .` Note that is tagged with its name `vaadin-ai-chat` and version number `1.0`.
 
 #### Deploying to Docker
-As a next, intermediate step, it is good to check that the image can be correctly deployed to a local Docker environment.  
+Next, as an intermediate step, it is good to check that the image can be correctly deployed to your local Docker environment by doing:
 
 `docker run --publish 8080:8080 --detach --name vaadin-chat vaadin-ai-chat:1.0`
 
-This should give you a working application, again on port 8080, but this time served from a running Docker image. This is reassuring we're on the right track.
+This should give you a working application, again on port 8080, but this time served from a running Docker image. It is reassuring to know we're on the right track.
 
-We can actually confirm that the application image does not contain the source code anymore by taking a quick peek in the running container. We do so by looking up the process name: `docker ps` (you will learn the `<container name>`) and by creating a shell into the running container: `docker exec -it <container name> /bin/bash`. 
+We can actually confirm that the application image does not contain the source code anymore by taking a quick peek in the running container. We do so by looking up the process name: `docker ps` (you will learn the `<container name>`) and by creating a shell into the running container: `docker exec -it <container name> /bin/bash`. Look around at the container's directory structure and see that the Java application that is run is indeed found in `/usr/app/app.jar`.
 
 After we've established the application and thus the image works correctly, we can remove the container again with: `docker rm --force vaadin-chat`.
 
