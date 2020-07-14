@@ -58,15 +58,11 @@ Create such a *Secret* called `regcred` as follows:
 
 (Replace the <attributes> with your own Docker credentials.)
 
-Once you have created the *Secret*, it is good to inspect the result with:
-
-`kubectl get secret regcred --output=yaml`.
+Once you have created the *Secret*, it is good to inspect the result with: `kubectl get secret regcred --output=yaml`.
 
 #### Preparing Kubernetes
-Kubernetes has a extensive command line utility called `kubectl` (pronounced as Kube Control), 
-
-Before we're going to deploy to Kubernetes, it is a good idea to [install the Web UI Dashboard]
-(https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/), which gives an interesting perspective on what is happening on our local cluster. 
+Kubernetes has a extensive command line utility called `kubectl` (pronounced as Kube Control), who's list of options can be slightly intimidating at the start. So before we're going to deploy to Kubernetes, we'll [install the Web UI Dashboard]
+(https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/), which gives an interesting more visual perspective on what is happening on our cluster. 
 
 Run:
 - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml`
