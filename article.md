@@ -7,7 +7,7 @@ In this article, we'll first checkout, build and run the application to confirm 
 
 Let's get started. 
 
-#### Building the application 
+#### 1: Building the application 
 We start by cloning the Chatbot app from GitHub: `git clone https://github.com/alejandro-du/vaadin-ai-chat/`. 
 
 You want to ensure that everything works by first building and the app locally: 
@@ -17,7 +17,7 @@ You want to ensure that everything works by first building and the app locally:
 
 The Maven `package` command will build the application, after which it is started as a Java jar application from the `target` directory. Check it out at http://localhost:8080 and ask Alice a few questions. Btw, you will get a nice grasp of what Alice is capable of by taking a look in `src/main/resources/bots/alice/aiml`.
 
-#### Creating an image
+#### 2: Creating an image
 Now we know that this works, we'll create a container image so we can easily deploy the application to other environments. We need a Dockerfile to create a container image that contains the application that we can then deploy. This is where a feature called 'Docker configuration' that was recently added to [Vaadin Starter](https://start.vaadin.com/) comes in handy. We won't use the Starter App that is generated this time, but we will extract the `Dockerfile` from the zip file that is conveniently downloaded after configuring the application. 
 
 So open https://start.vaadin.com/, select 'Docker configuration' in the lower left corner and click the blue *Download App* button at the top. Open the zip file and copy the `Dockerfile` to the `vaadin-ai-chat` project folder. 
@@ -26,7 +26,7 @@ Take a moment to look at the `Dockerfile` and see which steps it contains. It is
 
 A Docker image based on the `Dockerfile` is created as follows: `docker build --tag vaadin-ai-chat:1.0 .` Note that is tagged with its name `vaadin-ai-chat` and version number `1.0`.
 
-#### Deploying to Docker
+#### 3: Deploying to Docker
 Next, as an intermediate step, it is good to check that the image can be correctly deployed to your local Docker environment by telling Docker to run it:
 
 `docker run --publish 8080:8080 --detach --name vaadin-chat vaadin-ai-chat:1.0`
@@ -37,7 +37,7 @@ We can actually confirm that the application image does not contain the source c
 
 After we've established the application and thus the image works correctly, we can remove the container again with: `docker rm --force vaadin-chat`.
 
-#### Pushing the image to a repository
+#### 4: Pushing the image to a repository
 Compared to Docker, Kubernetes works a bit differently, which means that we cannot just push our Docker image to the Kubernetes cluster. We need to push the image we created to a registry first. A registry is an online location from where images are stored and managed. We tag the image we created, to ensure we give the image a name and version number that uniquely identifies it.    
 
 `docker tag vaadin-ai-chat:1.0 <docker user_name>/vaadin-ai-chat:1.0`
@@ -60,23 +60,22 @@ Create such a *Secret* called `regcred` as follows:
 
 Once you have created the *Secret*, it is good to inspect the result with: `kubectl get secret regcred --output=yaml`.
 
-#### Preparing Kubernetes
-Kubernetes has a extensive command line utility called `kubectl` (pronounced as Kube Control), who's list of options can be slightly intimidating at the start. So before we're going to deploy to Kubernetes, we'll [install the Web UI Dashboard]
-(https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/), which gives an interesting more visual perspective on what is happening on our cluster. 
+#### 5: Preparing Kubernetes
+Kubernetes has a extensive command line utility called `kubectl` (by some pronounced as [Cube Control](https://opensource.com/article/18/12/kubectl-definitive-pronunciation-guide)), who's list of options can be slightly intimidating at the start. So before we're going to deploy to Kubernetes, we'll [install the Web UI Dashboard]
+(https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/), which gives an interesting visual perspective on what is happening on our cluster.
 
-Run:
+Run the following from the command line:
 - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml`
-- `kubectl proxy`  
-- `http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/`
+- `kubectl proxy`
 
-Before we can login to our new Admin dashboard, we need to [create a login and bind this to admin dashboard](https://www.replex.io/blog/how-to-install-access-and-add-heapster-metrics-to-the-kubernetes-dashboard):
+Before we can login to our new Admin dashboard, we need to [create a login and bind this to admin dashboard](https://www.replex.io/blog/how-to-install-access-and-add-heapster-metrics-to-the-kubernetes-dashboard). We do so by running:
 
 - `kubectl create serviceaccount dashboard-admin-sa`
-- `kubectl create clusterrolebinding dashboard-admin-sa 
-                                                                                       --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa`
-We confirm that this worked by retrieving the secret: `kubectl get secrets`. This gives the token we need to login to the UI Dashboard.  
+- `kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa`
 
-#### Deploying to Kubernetes
+We confirm that this worked by retrieving the secret: `kubectl get secrets`. This gives the token we need to login to the UI Dashboard. Copy and be ready to paste when opening the [Web UI](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
+
+#### 6: Deploying to Kubernetes
 Before we can only deploy our application, we need to defined it in a Kubernetes configuration file, which follows the YAML format. 
 
 ```
@@ -115,17 +114,13 @@ spec:
       targetPort: 8080
       nodePort: 30001
 
-``` 
+```
 
-Now, we can install the Chatbot application, by asking KubeControl to apply the configuration.  
-
-`kubectl apply -f vaadin-chat.yml`
+Now, we can install the Chatbot application, by asking `kubectl` to apply the configuration, which means to deploy our application: `kubectl apply -f vaadin-chat.yml`.
 
 If you open your browser to https://localhost:30001, you will see the Chatapp in action for the third time, this time deployed to your local Kubernetes cluster.
 
-You can remove (undeploy) the application again with the following command:
-
-`kubectl delete -f vaadin-chat.yml`
+You can remove (undeploy) the application again with the following command: `kubectl delete -f vaadin-chat.yml`.
 
 All in all, quite straightforward. 
 
