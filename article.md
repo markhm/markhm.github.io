@@ -76,7 +76,7 @@ Before we can login to our new Admin dashboard, we need to [create a login and b
 We confirm that this worked by retrieving the secret: `kubectl get secrets`. This gives the token we need to login to the UI Dashboard. Copy and be ready to paste when opening the [Web UI](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
 
 #### 6: Deploying to Kubernetes
-Before we can only deploy our application, we need to defined it in a Kubernetes configuration file, which follows the YAML format. 
+Before we can only deploy our application, we need to defined it in a Kubernetes configuration file, which follows the YAML format. Save the following in the root of the `vaadin-ai-chat` project with filename `vaadin-chat.yml`: 
 
 ```
 apiVersion: apps/v1
@@ -115,6 +115,7 @@ spec:
       nodePort: 30001
 
 ```
+There are several introductions to Kubernetes' configuration file format available online, e.g. [here](https://www.mirantis.com/blog/introduction-to-yaml-creating-a-kubernetes-deployment/), so we will not explain its full contents in this article. But we will point out the reference to the image (`docker.io/markhm/vaadin-ai-chat:1.0`) and 
 
 Now, we can install the Chatbot application, by asking `kubectl` to apply the configuration, which means to deploy our application: `kubectl apply -f vaadin-chat.yml`.
 
