@@ -50,9 +50,9 @@ With this tag, we can now push the image to a registry. We could push to a local
 
 To check all is as expected, log in to [Docker Hub](https://hub.docker.com/) via a browser and see that the image is available. If necessary, modify the repository's visibility settings to `Private`.
 
-Next, we need to create a *secret*, which Kubernetes can use authenticate and download the image we've just pushed.  
+Next, we need to create a *secret*, which Kubernetes can use authenticate and download the image we've just pushed from the registry.
 
-Create such a *secret* called `regcred` as follows:
+We will create *secret* that we will call `regcred` as follows:
 
 `kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>`
 
@@ -73,10 +73,10 @@ Before we can login to our new Admin dashboard, we need to [create a login and b
 - `kubectl create serviceaccount dashboard-admin-sa`
 - `kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa`
 
-We confirm that this worked by retrieving the secret: `kubectl get secrets`. This gives the token we need to login to the UI Dashboard. Copy and be ready to paste when opening the [Web UI](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
+We confirm that this worked by retrieving the secret: `kubectl get secrets`. This gives the token we need to login to the UI Dashboard. Copy and be ready to paste when opening the [Web UI](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/). You will log in to an impressive UI dashboard that uncovers many Kubernetes details at a glance.
 
 #### 6: Deploying to Kubernetes
-Before we can only deploy our application, we need to defined it in a Kubernetes configuration file, which follows the YAML format. Save the following in the root of the `vaadin-ai-chat` project with filename `vaadin-chat.yml`: 
+Before we can only deploy our application, we need to define it in a Kubernetes configuration file, which follows the YAML format. Save the following in the root of the `vaadin-ai-chat` project with filename `vaadin-chat.yml`: 
 
 ```
 apiVersion: apps/v1
@@ -115,7 +115,7 @@ spec:
       nodePort: 30001
 
 ```
-There are several introductions to Kubernetes' configuration file format available online, e.g. [here](https://www.mirantis.com/blog/introduction-to-yaml-creating-a-kubernetes-deployment/), so we will not explain its full contents in this article. But we will point out the reference to the image (`docker.io/<docker user_name>/vaadin-ai-chat:1.0`) and the secret we created earlier (`imagePullSecrets: - name: regcred`). At the end of the config file, you will see that the application that runs in the pod on port 8080 is actually exposed via port 30001. 
+Since there are several introductions to Kubernetes' configuration file format available online, e.g. [here](https://www.mirantis.com/blog/introduction-to-yaml-creating-a-kubernetes-deployment/), we will not explain its full contents in this article. But we will point out the reference to the image (`docker.io/<docker user_name>/vaadin-ai-chat:1.0`) and the secret we created earlier (`imagePullSecrets: - name: regcred`). At the end of the config file, you will see that the application that runs in the pod on port 8080 is actually exposed via port 30001. 
 
 Now, we can install the Chatbot application, by asking `kubectl` to apply the configuration, which means to deploy our application: `kubectl apply -f vaadin-chat.yml`.
 
