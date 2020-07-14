@@ -1,5 +1,5 @@
 ## Deploying a Vaadin app to Kubernetes
-Because there are few things more exciting than deploying an AI app to your own cloud, we'll be deploying [Alejandre Duarte](https://vaadin.com/blog/author/alejandro-duarte)'s [Vaadin](https://www.vaadin.com) [Chatbot app](https://vaadin.com/blog/building-a-chatbot-in-java) to a local Kubernetes cluster today. It is actually very straightforward. 
+Because there are few things more exciting than deploying an AI app to your own cloud, we'll be deploying [Alejandre Duarte](https://vaadin.com/blog/author/alejandro-duarte)'s [Vaadin](https://www.vaadin.com) [Chatbot demo app](https://vaadin.com/blog/building-a-chatbot-in-java) to a local Kubernetes cluster today. It is actually very straightforward. 
 
 If you did not read it yet, the blog on how to build the Chatbot app is found in [here](https://vaadin.com/blog/building-a-chatbot-in-java). 
 
