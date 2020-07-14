@@ -1,28 +1,21 @@
-### Prerequisites
-macOS
-Java 11
-Maven 
-Docker Desktop Community ed. version 2.3.0.3
-
-
-
 ## Deploying a Vaadin app to Kubernetes
-
-Because there are few things more exciting than deploying an AI app to the cloud, we'll be deploying Alejandre Duarte's Chatbot app to a local Kubernetes cluster today.
-
-It is actually very straightforward. 
+Because there are few things more exciting than deploying an AI app to your own cloud, we'll be deploying [Alejandre Duarte](https://vaadin.com/blog/author/alejandro-duarte)'s Vaadin [Chatbot app](https://vaadin.com/blog/building-a-chatbot-in-java) to a local Kubernetes cluster today. It is actually very straightforward. 
 
 For those that did not yet see it yet, the article on how to build the Chatbot app is found [here](https://vaadin.com/blog/building-a-chatbot-in-java). 
 
-#### Building the application 
-We start by checking out the Chatbot app: `git clone https://github.com/alejandro-du/vaadin-ai-chat/`. 
+In this article, we'll first checkout and build the application and confirm it works locally. Then we'll create a Docker image and deploy this image to our local Docker environment. Again, we confirm that the application still works as expected. We'll then push the image we create to a private image registry and tell Kubernetes the proper, which will allow Kubernetes to deploy and run our app. 
 
-You want to ensure that everything works by quickly running the app locally: 
+Let's get started. 
+
+#### Building the application 
+We start by cloning the Chatbot app from GitHub: `git clone https://github.com/alejandro-du/vaadin-ai-chat/`. 
+
+You want to ensure that everything works by first building and the app locally: 
 `cd vaadin-ai-chat`
 `mvn package`
 `java -jar target/vaadin-chat-1.0-SNAPSHOT.jar`
 
-These commands will build and run the application locally. Check it out at http://localhost:8080.
+The Maven `package` command will build the application, after which it is started as a Java jar application from the `target` directory. Check it out at http://localhost:8080.
 
 #### Creating an image
 Now we know that this works, we'll create a container image so we can easily deploy the application to other environments. Next, we need a Dockerfile to create a container image that we can deploy. I recently noticed that the [Vaadin Starter](https://start.vaadin.com/) now has a convenient option called 'Docker configuration'. We won't use the starter app that is generated this time, but we will extract the `Dockerfile` from the zip file that is conveniently downloaded after configuring the application. 
@@ -143,8 +136,14 @@ All in all, quite straightforward.
 Thanks for your attention...!
 
 ----
-sources: 
-- 
+## Prerequisites
+This article is based on: 
+- macOS Catalina (10.15.5)
+- Java 11
+- Maven 3.6.3
+- Docker Desktop Community ed. version 2.3.0.3
+
+### Sources used: 
 - https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 - https://kukulinski.com/10-most-common-reasons-kubernetes-deployments-fail-part-1/
 - https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
